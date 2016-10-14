@@ -5,26 +5,24 @@ namespace DCS\RatingBundle\EventListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use DCS\RatingBundle\DCSRatingEvents;
 use DCS\RatingBundle\Event\RatingEvent;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * Class RatingUpdateInfoEventListener
+ * @package DCS\RatingBundle\EventListener
+ */
 class RatingUpdateInfoEventListener implements EventSubscriberInterface
 {
-    /**
-     * @var Request
-     */
-    private $request;
+    private $requestStack;
 
-    /**
-     * Set request
-     *
-     * @param Request $request
-     */
-    public function setRequest(Request $request = null)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->request = $request;
+        $this->requestStack = $requestStack;
     }
 
+    /**
+     * @return array
+     */
     public static function getSubscribedEvents()
     {
         return array(
@@ -32,20 +30,24 @@ class RatingUpdateInfoEventListener implements EventSubscriberInterface
         );
     }
 
+    /**
+     * @param RatingEvent $event
+     */
     public function updatePermalink(RatingEvent $event)
     {
-        if (null === $this->request) {
+        if (null === $this->requestStack->getCurrentRequest()) {
             return;
         }
 
         $rating = $event->getRating();
+        $attributes = $this->requestStack->getCurrentRequest()->attributes;
 
         if (null === $rating->getPermalink()) {
-            $rating->setPermalink($this->request->get('permalink'));
+            $rating->setPermalink($attributes->get('permalink'));
         }
 
         if (null === $rating->getSecurityRole()) {
-            $rating->setSecurityRole($this->request->get('securityRole'));
+            $rating->setSecurityRole($attributes->get('securityRole'));
         }
     }
 }

@@ -35,8 +35,13 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
+        #dump($request);
+        #dump($this->container->get('security.authorization_checker')->isGranted($rating->getSecurityRole()));
+        #die();
+
+
         // check if the user has permission to express the vote on entity Rating
-        if (!$this->container->get('security.context')->isGranted($rating->getSecurityRole())) {
+        if (!$this->container->get('security.authorization_checker')->isGranted($rating->getSecurityRole())) {
             $viewName = 'star';
         } else {
             // check if the voting system allows multiple votes. Otherwise
@@ -65,7 +70,8 @@ class RatingController extends Controller
             throw new NotFoundHttpException('Rating not found');
         }
 
-        if (null === $rating->getSecurityRole() || !$this->container->get('security.context')->isGranted($rating->getSecurityRole())) {
+        if (null === $rating->getSecurityRole() || !$this->container->get('security.authorization_checker')
+                ->isGranted($rating->getSecurityRole())) {
             throw new AccessDeniedHttpException('You can not perform the evaluation');
         }
 

@@ -21,7 +21,7 @@ abstract class RatingManager implements RatingManagerInterface
      * Finds one rating by id
      *
      * @param string $id
-     * @return ThreadInterface
+     * @return RatingInterface
      */
     public function findOneById($id)
     {
