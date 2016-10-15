@@ -1,10 +1,12 @@
 {% set securityRole = role|default(getDefaultSecurityRole()) %}
 {% set permalink = permalink|default(app.request.uri) %}
 {% set voteType = voteType|default('scale') %}
+{% set style = style|default('') %}
 {{ render(controller('DCSRatingBundle:Rating:control',
                         {'id' : id,
                          'permalink' : permalink,
                          'securityRole' : securityRole,
                          'voteType' : voteType,
+                         'style' : style,
                          'params' : params|default({})
                         })) }}

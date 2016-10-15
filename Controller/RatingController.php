@@ -19,17 +19,20 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
+        // select view according to voteType
         $viewName = $rating->getVoteType() == "like" ? "like" : "scale";
 
         return $this->render('DCSRatingBundle:Rating:'.$viewName.'.html.twig', array(
             'rating' => $rating,
             'rate'   => $rating->getRate(),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
+            'style' => $request->attributes->get('style')
         ));
     }
 
     public function controlAction($id, Request $request)
     {
+
         $ratingManager = $this->container->get('dcs_rating.manager.rating');
 
         if (null === $rating = $ratingManager->findOneById($id)) {
@@ -37,9 +40,7 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
-        #dump($rating);
-        #die();
-
+        // select view's prefix according to voteType
         $prefix = $rating->getVoteType() == "like" ? "like" : "scale";
 
         // check if the user has permission to express the vote on entity Rating
@@ -63,6 +64,7 @@ class RatingController extends Controller
             'rate'   => $rating->getRate(),
             'params' => $request->get('params', array()),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
+            'style' => $request->attributes->get('style')
         ));
     }
 

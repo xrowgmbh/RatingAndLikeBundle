@@ -42,29 +42,35 @@
 
 /* Likes */
 .dcs-rating-container > .like {
-    /*direction: ltr;*/
     color: #ddd;
-    font-size: 1em;
+    font-size: 2em;
     position: relative;
-    display: inline-block;
 }
 .dcs-rating-container > a.like {
     text-decoration: none;
     cursor: pointer;
 }
 
-.dcs-rating-container > .like:before {
-    color: #FDE16D;
+/* heart */
+.dcs-rating-container > .heart > i:before {
     content: '\2665';
-    position: absolute;
+}
+.dcs-rating-container > a.heart:hover > i:before,
+.dcs-rating-container > a.heart:hover ~ a.heart > i:before {
+    content: '\2665';
+    color: green;
     left: 0;
     width: 100%;
 }
-.dcs-rating-container > a.like:hover:before,
-.dcs-rating-container > a.like:hover ~ a.like:before {
-    color: #DBD816;
-    content: '\2665';
-    position: absolute;
+
+/* hand */
+.dcs-rating-container > .hand > i:before {
+    content: '\2669';
+}
+.dcs-rating-container > a.hand:hover > i:before,
+.dcs-rating-container > a.hand:hover ~ a.hand > i:before {
+    content: '\2669';
+    color: green;
     left: 0;
     width: 100%;
 }

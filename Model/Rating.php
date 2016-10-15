@@ -188,6 +188,7 @@ abstract class Rating implements RatingInterface
      * Set the voteType
      *
      * @param string $voteType
+     * @return RatingInterface
      */
     public function setVoteType($voteType)
     {
