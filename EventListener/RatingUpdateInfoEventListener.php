@@ -49,5 +49,9 @@ class RatingUpdateInfoEventListener implements EventSubscriberInterface
         if (null === $rating->getSecurityRole()) {
             $rating->setSecurityRole($attributes->get('securityRole'));
         }
+
+        if (null === $rating->getVoteType()) {
+            $rating->setVoteType($attributes->get('voteType'));
+        }
     }
 }

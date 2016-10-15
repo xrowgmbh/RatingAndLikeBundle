@@ -80,6 +80,21 @@ interface RatingInterface
     public function getSecurityRole();
 
     /**
+     * Set the voteType
+     *
+     * @param string $voteType
+     * @return RatingInterface
+     */
+    public function setVoteType($voteType);
+
+    /**
+     * Get the voteType
+     *
+     * @return string
+     */
+    public function getVoteType();
+
+    /**
      * Sets the date on which the thread was added
      *
      * @param \DateTime $createdAt

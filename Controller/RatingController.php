@@ -19,7 +19,9 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
-        return $this->render('DCSRatingBundle:Rating:star.html.twig', array(
+        $viewName = $rating->getVoteType() == "like" ? "like" : "scale";
+
+        return $this->render('DCSRatingBundle:Rating:'.$viewName.'.html.twig', array(
             'rating' => $rating,
             'rate'   => $rating->getRate(),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
@@ -35,24 +37,24 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
-        #dump($request);
-        #dump($this->container->get('security.authorization_checker')->isGranted($rating->getSecurityRole()));
+        #dump($rating);
         #die();
 
+        $prefix = $rating->getVoteType() == "like" ? "like" : "scale";
 
         // check if the user has permission to express the vote on entity Rating
         if (!$this->container->get('security.authorization_checker')->isGranted($rating->getSecurityRole())) {
-            $viewName = 'star';
+            $viewName = $prefix;
         } else {
             // check if the voting system allows multiple votes. Otherwise
             // check if the user has already expressed a preference
             if (!$this->container->getParameter('dcs_rating.unique_vote')) {
-                $viewName = 'choice';
+                $viewName = $prefix.'_choice';
             } else {
                 $vote = $this->container->get('dcs_rating.manager.vote')
                     ->findOneByRatingAndVoter($rating, $this->getUser());
 
-                $viewName = null === $vote ? 'choice' : 'star';
+                $viewName = null === $vote ? $prefix.'_choice' : $prefix;
             }
         }
 

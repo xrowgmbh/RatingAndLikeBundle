@@ -20,6 +20,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('db_driver')->isRequired()->end()
                 ->scalarNode('base_security_role')->defaultValue('IS_AUTHENTICATED_FULLY')->end()
                 ->scalarNode('base_path_to_redirect')->defaultValue('/')->end()
+                #->scalarNode('base_type')->defaultValue('scale')->end()
                 ->booleanNode('unique_vote')->defaultTrue()->end()
                 ->integerNode('max_value')->defaultValue(5)->end()
             ->end()

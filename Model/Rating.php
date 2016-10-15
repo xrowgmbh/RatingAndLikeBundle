@@ -41,6 +41,13 @@ abstract class Rating implements RatingInterface
     protected $permalink;
 
     /**
+     * Type of voting
+     *
+     * @var string
+     */
+    protected $voteType;
+
+    /**
      * Date on which the thread was added
      *
      * @var \DateTime
@@ -175,6 +182,26 @@ abstract class Rating implements RatingInterface
     public function getSecurityRole()
     {
         return $this->securityRole;
+    }
+
+    /**
+     * Set the voteType
+     *
+     * @param string $voteType
+     */
+    public function setVoteType($voteType)
+    {
+        $this->voteType = $voteType;
+    }
+
+    /**
+     * Get the voteType
+     *
+     * @return string
+     */
+    public function getVoteType()
+    {
+        return $this->voteType;
     }
 
     /**

@@ -1,3 +1,4 @@
+/* Scale */
 .dcs-rating-container {
     direction: rtl;
     overflow: hidden;
@@ -34,6 +35,35 @@
 .dcs-rating-container > a.star:hover ~ a.star:before {
     color: #DBD816;
     content: '\2605';
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+
+/* Likes */
+.dcs-rating-container > .like {
+    /*direction: ltr;*/
+    color: #ddd;
+    font-size: 1em;
+    position: relative;
+    display: inline-block;
+}
+.dcs-rating-container > a.like {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.dcs-rating-container > .like:before {
+    color: #FDE16D;
+    content: '\2665';
+    position: absolute;
+    left: 0;
+    width: 100%;
+}
+.dcs-rating-container > a.like:hover:before,
+.dcs-rating-container > a.like:hover ~ a.like:before {
+    color: #DBD816;
+    content: '\2665';
     position: absolute;
     left: 0;
     width: 100%;
