@@ -40,18 +40,18 @@ class RatingUpdateInfoEventListener implements EventSubscriberInterface
         }
 
         $rating = $event->getRating();
-        $attributes = $this->requestStack->getCurrentRequest()->attributes;
+        $currentRequest = $this->requestStack->getCurrentRequest();
 
         if (null === $rating->getPermalink()) {
-            $rating->setPermalink($attributes->get('permalink'));
+            $rating->setPermalink($currentRequest->get('permalink'));
         }
 
         if (null === $rating->getSecurityRole()) {
-            $rating->setSecurityRole($attributes->get('securityRole'));
+            $rating->setSecurityRole($currentRequest->get('securityRole'));
         }
 
         if (null === $rating->getVoteType()) {
-            $rating->setVoteType($attributes->get('voteType'));
+            $rating->setVoteType($currentRequest->get('voteType'));
         }
     }
 }

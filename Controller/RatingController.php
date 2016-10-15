@@ -10,6 +10,11 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class RatingController extends Controller
 {
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function showRateAction($id, Request $request)
     {
         $ratingManager = $this->container->get('dcs_rating.manager.rating');
@@ -26,13 +31,17 @@ class RatingController extends Controller
             'rating' => $rating,
             'rate'   => $rating->getRate(),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
-            'style' => $request->attributes->get('style')
+            'style' => $request->get('style')
         ));
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
     public function controlAction($id, Request $request)
     {
-
         $ratingManager = $this->container->get('dcs_rating.manager.rating');
 
         if (null === $rating = $ratingManager->findOneById($id)) {
@@ -64,7 +73,7 @@ class RatingController extends Controller
             'rate'   => $rating->getRate(),
             'params' => $request->get('params', array()),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
-            'style' => $request->attributes->get('style')
+            'style' => $request->get('style')
         ));
     }
 
