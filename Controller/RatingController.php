@@ -24,6 +24,14 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
+        if($rating->getVoteType() == 'scale') {
+            // current user preference
+            $vote = $this->container->get('dcs_rating.manager.vote')
+                ->findOneByRatingAndVoter($rating, $this->getUser());
+        } else {
+            $vote = null;
+        }
+
         // select view according to voteType
         $viewName = $rating->getVoteType() == "like" ? "like" : "scale";
 
@@ -31,6 +39,7 @@ class RatingController extends Controller
             'rating' => $rating,
             'rate'   => $rating->getRate(),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
+            'userRating' => $vote,
             'style' => $request->get('style')
         ));
     }
@@ -49,6 +58,9 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
+        // current user preference
+        $vote = null;
+
         // select view's prefix according to voteType
         $prefix = $rating->getVoteType() == "like" ? "like" : "scale";
 
@@ -61,8 +73,11 @@ class RatingController extends Controller
             if (!$this->container->getParameter('dcs_rating.unique_vote')) {
                 $viewName = $prefix.'_choice';
             } else {
-                $vote = $this->container->get('dcs_rating.manager.vote')
-                    ->findOneByRatingAndVoter($rating, $this->getUser());
+                if($rating->getVoteType() == 'scale') {
+                    // current user preference
+                    $vote = $this->container->get('dcs_rating.manager.vote')
+                        ->findOneByRatingAndVoter($rating, $this->getUser());
+                }
 
                 $viewName = null === $vote ? $prefix.'_choice' : $prefix;
             }
@@ -73,10 +88,20 @@ class RatingController extends Controller
             'rate'   => $rating->getRate(),
             'params' => $request->get('params', array()),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
+            'userRating' => $vote,
             'style' => $request->get('style')
         ));
     }
 
+    /**
+     * @param $id
+     * @param $value
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws \Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+     */
     public function addVoteAction($id, $value, Request $request)
     {
         if (null === $rating = $this->container->get('dcs_rating.manager.rating')->findOneById($id)) {

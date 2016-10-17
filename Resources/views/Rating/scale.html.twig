@@ -10,4 +10,7 @@
             <span class="star {{ style }}">☆</span>
         {% endfor %}
     </div>
+    {% if userRating %}
+        <div>your choice: {{ userRating.value }}</div>
+    {% endif %}
 {% endspaceless %}

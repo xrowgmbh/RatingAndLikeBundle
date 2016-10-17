@@ -7,6 +7,9 @@
     direction: rtl;
     unicode-bidi: bidi-override;
 }
+.ltr {
+    direction: ltr;
+}
 .dcs-rating-container > .star {
     direction: ltr;
     color: #ddd;
