@@ -1,8 +1,10 @@
 /* Scale */
 .dcs-rating-container {
-    direction: rtl;
     overflow: hidden;
     display: inline-block;
+}
+.rtl {
+    direction: rtl;
     unicode-bidi: bidi-override;
 }
 .dcs-rating-container > .star {
@@ -45,32 +47,22 @@
     color: #ddd;
     font-size: 2em;
     position: relative;
+    cursor: default;
 }
 .dcs-rating-container > a.like {
     text-decoration: none;
     cursor: pointer;
 }
+.dcs-rating-container > a.like:hover {
+    color: green;
+}
 
 /* heart */
-.dcs-rating-container > .heart > i:before {
+.dcs-rating-container > .heart:before {
     content: '\2665';
-}
-.dcs-rating-container > a.heart:hover > i:before,
-.dcs-rating-container > a.heart:hover ~ a.heart > i:before {
-    content: '\2665';
-    color: green;
-    left: 0;
-    width: 100%;
 }
 
 /* hand */
-.dcs-rating-container > .hand > i:before {
+.dcs-rating-container > .hand:before {
     content: '\2669';
-}
-.dcs-rating-container > a.hand:hover > i:before,
-.dcs-rating-container > a.hand:hover ~ a.hand > i:before {
-    content: '\2669';
-    color: green;
-    left: 0;
-    width: 100%;
 }

@@ -98,8 +98,8 @@ class RatingController extends Controller
         $voteManager = $this->container->get('dcs_rating.manager.vote');
 
         if ($this->container->getParameter('dcs_rating.unique_vote') &&
-            null !== $voteManager->findOneByRatingAndVoter($rating, $user)
-        ) {
+            null !== $voteManager->findOneByRatingAndVoter($rating, $user))
+        {
             throw new AccessDeniedHttpException('You have already rated');
         }
 
