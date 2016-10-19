@@ -23,6 +23,7 @@ class Configuration implements ConfigurationInterface
                 #->scalarNode('base_type')->defaultValue('scale')->end()
                 ->booleanNode('unique_vote')->defaultTrue()->end()
                 ->integerNode('max_value')->defaultValue(5)->end()
+                ->scalarNode('result_format')->defaultValue('twig')->end()
             ->end()
             ->append($this->buildModelConfiguration())
             ->append($this->buildServiceConfiguration())

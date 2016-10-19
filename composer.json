@@ -3,7 +3,7 @@
     "description": "This Bundle provides functionality for a rating system for Symfony2 applications",
     "type": "library",
     "keywords": [
-        "symfony2","rating","star","twig","fos","fosuserbundle"
+        "symfony","rating","star","scale","like","twig","fos","fosuserbundle"
     ],
     "license": "MIT",
     "homepage": "https://github.com/damianociarla/DCSRatingBundle",

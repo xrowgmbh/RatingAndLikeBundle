@@ -29,6 +29,7 @@ class DCSRatingExtension extends Extension
         $container->setParameter('dcs_rating.base_path_to_redirect', $config['base_path_to_redirect']);
         $container->setParameter('dcs_rating.unique_vote', $config['unique_vote']);
         $container->setParameter('dcs_rating.max_value', $config['max_value']);
+        $container->setParameter('dcs_rating.result_format', $config['result_format']);
         $container->setParameter('dcs_rating.model.rating.class', $config['model']['rating']);
         $container->setParameter('dcs_rating.model.vote.class', $config['model']['vote']);
 

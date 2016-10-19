@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RatingController extends Controller
 {
@@ -24,24 +25,32 @@ class RatingController extends Controller
             $ratingManager->saveRating($rating);
         }
 
-        if($rating->getVoteType() == 'scale') {
-            // current user preference
-            $vote = $this->container->get('dcs_rating.manager.vote')
-                ->findOneByRatingAndVoter($rating, $this->getUser());
-        } else {
-            $vote = null;
+        // current user preference
+        $vote = null;
+        // if unique_vote required and vote_type set to 'scale' (in other words 'stars')
+        if($this->getUser() && $this->container->getParameter('dcs_rating.unique_vote') && $rating->getVoteType() == 'scale') {
+            $vote = $this->container->get('dcs_rating.manager.vote')->findOneByRatingAndVoter($rating, $this->getUser());
         }
 
-        // select view according to voteType
-        $viewName = $rating->getVoteType() == "like" ? "like" : "scale";
-
-        return $this->render('DCSRatingBundle:Rating:'.$viewName.'.html.twig', array(
+        // form response data
+        $response = array(
             'rating' => $rating,
             'rate'   => $rating->getRate(),
             'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
             'userRating' => $vote,
             'style' => $request->get('style')
-        ));
+        );
+
+        // if json result requested return JsonResponse
+        if($this->container->getParameter('dcs_rating.result_format') == "json") {
+
+            return new JsonResponse($response);
+        }
+
+        // select view according to voteType
+        $viewName = $rating->getVoteType() == "like" ? "like" : "scale";
+
+        return $this->render('DCSRatingBundle:Rating:'.$viewName.'.html.twig', $response);
     }
 
     /**
@@ -60,6 +69,26 @@ class RatingController extends Controller
 
         // current user preference
         $vote = null;
+        // if unique_vote required and vote_type set to 'scale' (in other words 'stars')
+        if ($this->getUser() && $this->container->getParameter('dcs_rating.unique_vote') && $rating->getVoteType() == 'scale') {
+            $vote = $this->container->get('dcs_rating.manager.vote')->findOneByRatingAndVoter($rating, $this->getUser());
+        }
+
+        // form response data
+        $response = array(
+            'rating' => $rating,
+            'rate'   => $rating->getRate(),
+            'params' => $request->get('params', array()),
+            'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
+            'userRating' => $vote,
+            'style' => $request->get('style')
+        );
+
+        // if json result requested return JsonResponse
+        if($this->container->getParameter('dcs_rating.result_format') == "json") {
+
+            return new JsonResponse($response);
+        }
 
         // select view's prefix according to voteType
         $prefix = $rating->getVoteType() == "like" ? "like" : "scale";
@@ -73,24 +102,11 @@ class RatingController extends Controller
             if (!$this->container->getParameter('dcs_rating.unique_vote')) {
                 $viewName = $prefix.'_choice';
             } else {
-                if($rating->getVoteType() == 'scale') {
-                    // current user preference
-                    $vote = $this->container->get('dcs_rating.manager.vote')
-                        ->findOneByRatingAndVoter($rating, $this->getUser());
-                }
-
                 $viewName = null === $vote ? $prefix.'_choice' : $prefix;
             }
         }
 
-        return $this->render('DCSRatingBundle:Rating:'.$viewName.'.html.twig', array(
-            'rating' => $rating,
-            'rate'   => $rating->getRate(),
-            'params' => $request->get('params', array()),
-            'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
-            'userRating' => $vote,
-            'style' => $request->get('style')
-        ));
+        return $this->render('DCSRatingBundle:Rating:'.$viewName.'.html.twig', $response);
     }
 
     /**
