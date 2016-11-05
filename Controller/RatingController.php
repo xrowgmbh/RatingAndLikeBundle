@@ -26,23 +26,33 @@ class RatingController extends Controller
         }
 
         // current user preference
-        $vote = null;
+        $userRating = null;
         // if unique_vote required and vote_type set to 'scale' (in other words 'stars')
-        if($this->getUser() && $this->container->getParameter('dcs_rating.unique_vote') && $rating->getVoteType() == 'scale') {
+        if($this->getUser() && $this->container->getParameter('dcs_rating.unique_vote')) {
             $vote = $this->container->get('dcs_rating.manager.vote')->findOneByRatingAndVoter($rating, $this->getUser());
+            if ($vote) {
+                $userRating = $vote->getValue();
+            }
         }
 
         // form response data
+        $rate = ($rating->getRate() != 10) ? number_format((float)$rating->getRate(), 1, '.', '') : 10;
         $response = array(
-            'rating' => $rating,
-            'rate'   => $rating->getRate(),
-            'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
-            'userRating' => $vote,
-            'style' => $request->get('style')
+            #'rating' => $rating,
+            'id'            => $rating->getId(),
+            'rate'          => $rate,
+            'numVotes'      => (int)$rating->getNumVotes(),
+            'maxValue'      => $this->container->getParameter('dcs_rating.max_value'),
+            'userRating'    => (int)$userRating,
+            'style'         => $rating->get('style')
         );
 
         // if json result requested return JsonResponse
-        if($this->container->getParameter('dcs_rating.result_format') == "json") {
+        $resultFormat = ($request->get('resultFormat'))
+            ? $request->get('resultFormat')
+            : $this->container->getParameter('dcs_rating.result_format');
+
+        if($resultFormat == "json") {
 
             return new JsonResponse($response);
         }
@@ -69,23 +79,34 @@ class RatingController extends Controller
 
         // current user preference
         $vote = null;
+        $userRating = null;
         // if unique_vote required and vote_type set to 'scale' (in other words 'stars')
-        if ($this->getUser() && $this->container->getParameter('dcs_rating.unique_vote') && $rating->getVoteType() == 'scale') {
+        if ($this->getUser() && $this->container->getParameter('dcs_rating.unique_vote')) {
             $vote = $this->container->get('dcs_rating.manager.vote')->findOneByRatingAndVoter($rating, $this->getUser());
+            if ($vote) {
+                $userRating = $vote->getValue();
+            }
         }
 
         // form response data
+        $rate = ($rating->getRate() != 10) ? number_format((float)$rating->getRate(), 1, '.', '') : 10;
         $response = array(
-            'rating' => $rating,
-            'rate'   => $rating->getRate(),
-            'params' => $request->get('params', array()),
-            'maxValue' => $this->container->getParameter('dcs_rating.max_value'),
-            'userRating' => $vote,
-            'style' => $request->get('style')
+            #'rating' => $rating,
+            'id'            => $rating->getId(),
+            'rate'          => $rate,
+            'numVotes'      => (int)$rating->getNumVotes(),
+            'params'        => $request->get('params', array()),
+            'maxValue'      => $this->container->getParameter('dcs_rating.max_value'),
+            'userRating'    => (int)$userRating,
+            'style'         => $request->get('style')
         );
 
         // if json result requested return JsonResponse
-        if($this->container->getParameter('dcs_rating.result_format') == "json") {
+        $resultFormat = ($request->get('resultFormat'))
+            ? $request->get('resultFormat')
+            : $this->container->getParameter('dcs_rating.result_format');
+
+        if($resultFormat == "json") {
 
             return new JsonResponse($response);
         }
@@ -102,7 +123,7 @@ class RatingController extends Controller
             if (!$this->container->getParameter('dcs_rating.unique_vote')) {
                 $viewName = $prefix.'_choice';
             } else {
-                $viewName = null === $vote ? $prefix.'_choice' : $prefix;
+                $viewName = (null === $vote) ? $prefix.'_choice' : $prefix;
             }
         }
 

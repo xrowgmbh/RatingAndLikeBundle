@@ -1,12 +1,14 @@
 {% set securityRole = role|default(getDefaultSecurityRole()) %}
 {% set permalink = permalink|default(app.request.uri) %}
 {% set voteType = voteType|default('scale') %}
+{% set resultFormat = resultFormat|default(null) %}
 {% set style = style|default('heart') %}
 {{ render(controller('DCSRatingBundle:Rating:control',
-                        {'id' : id,
-                         'permalink' : permalink,
-                         'securityRole' : securityRole,
-                         'voteType' : voteType,
-                         'style' : style,
-                         'params' : params|default({})
-                        })) }}
+    {'id' : id,
+    'permalink' : permalink,
+    'securityRole' : securityRole,
+    'voteType' : voteType,
+    'resultFormat' : resultFormat,
+    'style' : style,
+    'params' : params|default({})
+})) }}
