@@ -44,14 +44,12 @@ class RatingController extends Controller
             'numVotes'      => (int)$rating->getNumVotes(),
             'maxValue'      => $this->container->getParameter('dcs_rating.max_value'),
             'userRating'    => (int)$userRating,
-            'style'         => $rating->get('style')
+            'style'         => $request->get('style')
         );
 
-        // if json result requested return JsonResponse
-        $resultFormat = ($request->get('resultFormat'))
-            ? $request->get('resultFormat')
-            : $this->container->getParameter('dcs_rating.result_format');
+        $resultFormat = $this->getResultFormat($request->get('resultFormat'));
 
+        // if json result requested return JsonResponse
         if($resultFormat == "json") {
 
             return new JsonResponse($response);
@@ -101,11 +99,9 @@ class RatingController extends Controller
             'style'         => $request->get('style')
         );
 
-        // if json result requested return JsonResponse
-        $resultFormat = ($request->get('resultFormat'))
-            ? $request->get('resultFormat')
-            : $this->container->getParameter('dcs_rating.result_format');
+        $resultFormat = $this->getResultFormat($request->get('resultFormat'));
 
+        // if json result requested return JsonResponse
         if($resultFormat == "json") {
 
             return new JsonResponse($response);
@@ -170,7 +166,9 @@ class RatingController extends Controller
 
         $voteManager->saveVote($vote);
 
-        if ($request->isXmlHttpRequest()) {
+        $resultFormat = $this->getResultFormat($request->get('resultFormat'));
+
+        if ($request->isXmlHttpRequest() || $resultFormat == 'json') {
             return $this->forward('DCSRatingBundle:Rating:showRate', array(
                 'id' => $rating->getId()
             ));
@@ -186,5 +184,18 @@ class RatingController extends Controller
         }
 
         return $this->redirect($redirectUri);
+    }
+
+    /**
+     * @param $rFormat
+     * @return mixed
+     */
+    protected function getResultFormat($rFormat)
+    {
+        $format = ($rFormat)
+            ? $rFormat
+            : $this->container->getParameter('dcs_rating.result_format');
+
+        return $format;
     }
 }
