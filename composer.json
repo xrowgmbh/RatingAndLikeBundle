@@ -1,5 +1,5 @@
 {
-    "name": "xrowgmbh/rating-bundle",
+    "name": "damianociarla/rating-bundle",
     "description": "This Bundle provides functionality for a rating system for Symfony2 applications",
     "type": "library",
     "keywords": [
